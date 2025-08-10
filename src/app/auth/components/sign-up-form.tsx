@@ -22,13 +22,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // Esquema de validação para o formulário
 const formSchema = z.object({
   nome: z.string().min(3, "Nome é obrigatório"),
   email: z.email("Email inválido"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
-  confirmPassword: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+  password: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
+  confirmPassword: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "As senhas devem ser iguais",
   path: ["confirmPassword"],
@@ -38,6 +41,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const SignUpForm = () => {
+  const router = useRouter();
 
   // Inicialize o formulário com o esquema e os valores padrão
   const form = useForm<FormValues>({
@@ -51,9 +55,31 @@ const SignUpForm = () => {
   });
 
   // Função de envio do formulário
-  function onSubmit(values: FormValues) {
+  async function onSubmit(values: FormValues) {
     console.log("Formulário válido, enviado com os dados:", values);
     // Aqui você pode adicionar a lógica para autenticação
+    await authClient.signUp.email({
+      name: values.nome,
+      email: values.email,
+      password: values.password,
+      fetchOptions: {
+        onSuccess: () => {
+          console.log("Usuário criado com sucesso");
+          toast.success("Usuário criado com sucesso");
+          router.push("/");
+        },
+        onError: (error) => {
+          if (error.error.code === "USER_ALREADY_EXISTS") {
+            toast.error("Email já cadastrado!");
+
+            form.setError("email", {
+              message: "Email já cadastrado!",
+            });
+          }
+          console.error("Erro ao criar usuário:", error);
+        }
+      }
+    });
   };
 
   return (
