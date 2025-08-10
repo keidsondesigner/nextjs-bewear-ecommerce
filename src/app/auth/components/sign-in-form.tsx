@@ -22,6 +22,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // Esquema de validação para o formulário
 const formSchema = z.object({
@@ -33,6 +36,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const SignInForm = () => {
+  const router = useRouter();
 
   // Inicialize o formulário com o esquema e os valores padrão
   const form = useForm<FormValues>({
@@ -44,9 +48,37 @@ const SignInForm = () => {
   });
 
   // Função de envio do formulário
-  function onSubmit(values: FormValues) {
+  async function onSubmit(values: FormValues) {
     console.log("Formulário válido, enviado com os dados:", values);
     // Aqui você pode adicionar a lógica para autenticação
+    await authClient.signIn.email({
+      email: values.email,
+      password: values.password,
+      fetchOptions: {
+        onSuccess: () => {
+          // Redirecionar ou realizar outras ações após o login
+          toast.success("Login realizado com sucesso");
+          router.push("/");
+        },
+        onError: (error) => {
+          if (error.error.code === "USER_NOT_FOUND") {
+            toast.error("Email não encontrado");
+            return form.setError("email", {
+              message: "Email não encontrado",
+            });
+          }
+
+          if (error.error.code === "INVALID_EMAIL_OR_PASSWORD") {
+            toast.error("Email ou senha inválidos");
+            return form.setError("email", {
+              message: "Email ou senha inválidos",
+            });
+          }
+
+          console.error("Erro ao autenticar usuário:", error);
+        }
+      },
+    })
   };
 
   return (
