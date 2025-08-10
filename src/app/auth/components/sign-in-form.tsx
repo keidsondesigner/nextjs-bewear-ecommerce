@@ -29,7 +29,7 @@ import { useRouter } from "next/navigation";
 // Esquema de validação para o formulário
 const formSchema = z.object({
   email: z.email("Email inválido"),
-  password: z.string().min(8, "Senha deve ter pelo menos 6 caracteres"),
+  password: z.string().min(8, "Senha deve ter pelo menos 8 caracteres"),
 });
 
 // Tipagem para os dados do formulário
@@ -122,8 +122,8 @@ const SignInForm = () => {
                 />
             </CardContent>
             <CardFooter>
-              <Button type="submit" disabled={!form.formState.isValid}>
-                Entrar
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
               </Button>
             </CardFooter>
           </form>
