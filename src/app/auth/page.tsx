@@ -10,8 +10,8 @@ import SignUpForm from "./components/sign-up-form"
 
 const Auth = () => {
   return (
-    <div className="flex w-full max-w-sm flex-col gap-6 p-5">
-      <Tabs defaultValue="sign-in">
+    <div className="flex flex-col items-center justify-center h-screen w-full gap-6 p-5">
+      <Tabs defaultValue="sign-in" className="w-full max-w-sm">
         <TabsList>
           <TabsTrigger value="sign-in">Entrar</TabsTrigger>
           <TabsTrigger value="sign-up">Criar conta</TabsTrigger>

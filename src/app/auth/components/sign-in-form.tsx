@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // Esquema de validação para o formulário
 const formSchema = z.object({
@@ -119,9 +120,10 @@ const SignInForm = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-                />
+              />
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex justify-between">
+              <Link href="/auth/forgot-password" className="text-sm text-blue-500">Esqueceu sua senha?</Link>
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Entrando..." : "Entrar"}
               </Button>
