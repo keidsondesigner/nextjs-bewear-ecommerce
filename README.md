@@ -20,9 +20,6 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Project Overview
-
-This is a Next.js 15.4.1 project with React 19.1.0 and TypeScript, created with `create-next-app` and configured with TailwindCSS v4. The project name is "bewear-bootcamp" and uses the App Router architecture with shadcn/ui components.
 
 ## Development Commands
 
