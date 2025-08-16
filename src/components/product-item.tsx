@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { productTable, productVariantTable } from "@/db/schema";
 import Link from "next/link";
+import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
 
 // Tipagem uma lista de produtos;
 // Cada produto terá uma lista de variantes;
@@ -29,6 +30,9 @@ export default function ProductItem({ product }: ProductListProps) {
         </p>
         <p className="truncate text-xs text-muted-foreground font-medium">
           {product.description}
+        </p>
+        <p className="truncate text-sm font-semibold">
+          {formatCentsToBRL(firstVariant.priceInCents)}
         </p>
       </div>
     </Link>
