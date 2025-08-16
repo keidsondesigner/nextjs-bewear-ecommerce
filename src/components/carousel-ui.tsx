@@ -39,7 +39,7 @@ export default function CarouselUi() {
       >
         <CarouselContent>
           {brands.map((brand, index) => (
-            <CarouselItem key={index} className="basis-1/3 sm:basis-2/11">
+            <CarouselItem key={index} className="basis-1/3 sm:basis-1/5">
               <div className="flex flex-col items-center space-y-3 group cursor-pointer">
                 <Image
                   className="w-full md:w-fit h-auto"
