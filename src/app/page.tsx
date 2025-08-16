@@ -56,7 +56,7 @@ export default async function Home() {
           <CarouselUi />
         </section>
 
-        <section>
+        <section className="mb-14">
           <ProductList title="Mais vendidos" products={productsList} />
         </section>
 
