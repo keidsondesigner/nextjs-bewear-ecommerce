@@ -22,7 +22,14 @@ const Header = () => {
   return (
     <header className="max-w-[1280px] mx-auto p-5 flex items-center justify-between">
         <Link href="/">
-            <Image src="/logo.png" alt="logo" width={100} height={26.14} />
+            <Image
+              className="w-fit h-auto"
+              src="/logo.png"
+              alt="logo"
+              width={0}
+              height={0}
+              sizes="100vw"
+            />
         </Link>
       <div className="flex items-center">
         <Sheet>
