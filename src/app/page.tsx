@@ -5,8 +5,17 @@ import Header from "@/components/header";
 
 import { Button } from "@/components/ui/button";
 import CarouselUi from "@/components/carousel-ui";
+import { db } from "@/db";
+import ProductList from '../components/product-list';
 
-export default function Home() {
+export default async function Home() {
+  const productsList = await db.query.productTable.findMany({
+    with: {
+      variants: true,
+    },
+  });
+  console.log(productsList, "productsList");
+
   return (
     <>
       <Header />
@@ -45,6 +54,10 @@ export default function Home() {
             Marcas parceiras
           </h3>
           <CarouselUi />
+        </section>
+
+        <section>
+          <ProductList title="Mais vendidos" products={productsList} />
         </section>
 
         {/*OTHERS-PRODUCTS BANNER || SE MOBILE */}
