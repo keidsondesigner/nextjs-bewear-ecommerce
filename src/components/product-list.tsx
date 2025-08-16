@@ -34,15 +34,17 @@ export default function ProductList({ products, title }: ProductListProps) {
       >
         <CarouselContent>
           {products.map((product) => (
-            <CarouselItem key={product.id} className="basis-1/3 sm:basis-2/14 ml-4 sm:ml-6 md:ml-12">
+            <CarouselItem key={product.id} className="basis-1/2 sm:basis-2/8 xl:basis-2/14 ml-4 sm:ml-6 md:ml-12">
               <div className="flex flex-col cursor-pointer">
                 <ProductItem product={product} />
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <div className="hidden xl:flex">
+          <CarouselPrevious />
+          <CarouselNext />
+        </div>
       </Carousel>
     </>
   )

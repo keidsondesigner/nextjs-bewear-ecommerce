@@ -20,18 +20,18 @@ export default function ProductItem({ product }: ProductListProps) {
       <Image
         src={firstVariant.imageUrl}
         alt={firstVariant.name}
-        width={100}
-        height={100}
+        width={200}
+        height={200}
         className="rounded-3xl"
       />
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 mt-4">
         <p className="truncate text-sm font-medium">
           {product.name}
         </p>
-        <p className="truncate text-xs text-muted-foreground font-medium">
+        <p className="truncate text-xs text-muted-foreground font-medium mb-2">
           {product.description}
         </p>
-        <p className="truncate text-sm font-semibold">
+        <p className="truncate text-sm font-bold">
           {formatCentsToBRL(firstVariant.priceInCents)}
         </p>
       </div>
