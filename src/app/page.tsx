@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import CarouselUi from "@/components/carousel-ui";
 import { db } from "@/db";
 import ProductList from '../components/product-list';
+import ProductCategorySelector from "@/components/product-category-selector";
 
 export default async function Home() {
   const productsList = await db.query.productTable.findMany({
@@ -15,6 +16,9 @@ export default async function Home() {
     },
   });
   console.log(productsList, "productsList");
+
+  const productsCategories = await db.query.categoryTable.findMany();
+  console.log(productsCategories, "productsCategories");
 
   return (
     <>
@@ -56,8 +60,14 @@ export default async function Home() {
           <CarouselUi />
         </section>
 
+        {/* PRODUCTS LIST SECTION */}
         <section className="mb-14">
           <ProductList title="Mais vendidos" products={productsList} />
+        </section>
+
+        {/* PRODUCTS CATEGORY SELECTOR SECTION*/}
+        <section className="mb-14">
+          <ProductCategorySelector title="Categorias" categories={productsCategories}/>
         </section>
 
         {/*OTHERS-PRODUCTS BANNER || SE MOBILE */}
