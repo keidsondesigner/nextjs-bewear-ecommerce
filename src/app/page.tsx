@@ -10,6 +10,7 @@ import ProductList from '../components/product-list';
 import ProductCategorySelector from "@/components/product-category-selector";
 import { productTable } from "@/db/schema";
 import { desc } from "drizzle-orm";
+import Footer from "@/components/footer";
 
 export default async function Home() {
   const productsList = await db.query.productTable.findMany({
@@ -163,6 +164,7 @@ export default async function Home() {
           <ProductList title="Novidades" products={productsNewsAddedList} />
         </section>
       </main>
+      <Footer />
     </>
   );
 }
