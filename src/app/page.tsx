@@ -8,6 +8,8 @@ import CarouselUi from "@/components/carousel-ui";
 import { db } from "@/db";
 import ProductList from '../components/product-list';
 import ProductCategorySelector from "@/components/product-category-selector";
+import { productTable } from "@/db/schema";
+import { desc } from "drizzle-orm";
 
 export default async function Home() {
   const productsList = await db.query.productTable.findMany({
@@ -19,6 +21,16 @@ export default async function Home() {
 
   const productsCategories = await db.query.categoryTable.findMany();
   console.log(productsCategories, "productsCategories");
+
+  // Ordenando os produtos por data de criação (mais recentes primeiro)
+  // Isso é útil para a seção de "Novidades"
+  const productsNewsAddedList = await db.query.productTable.findMany({
+    orderBy: [desc(productTable.createdAt)],
+    with: {
+      variants: true,
+    },
+  });
+  console.log(productsList, "productsList");
 
   return (
     <>
@@ -144,6 +156,11 @@ export default async function Home() {
 
             </div>
           </div>
+        </section>
+
+        {/* News Products Added SECTION */}
+        <section className="mb-14">
+          <ProductList title="Novidades" products={productsNewsAddedList} />
         </section>
       </main>
     </>
