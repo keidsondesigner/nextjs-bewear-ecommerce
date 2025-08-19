@@ -1,16 +1,16 @@
 
 import Image from "next/image";
 
-import Header from "@/components/header";
+import { desc } from "drizzle-orm";
+import { db } from "@/db";
+import { productTable } from "@/db/schema";
 
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import CarouselUi from "@/components/carousel-ui";
-import { db } from "@/db";
-import ProductList from '../components/product-list';
+import ProductList from '@/components/product-list';
 import ProductCategorySelector from "@/components/product-category-selector";
-import { productTable } from "@/db/schema";
-import { desc } from "drizzle-orm";
-import Footer from "@/components/footer";
 
 export default async function Home() {
   const productsList = await db.query.productTable.findMany({
