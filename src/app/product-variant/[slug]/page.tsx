@@ -7,12 +7,13 @@ import Image from "next/image";
 import { db } from "@/db";
 import { productTable, productVariantTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Header from "@/components/header";
 import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
 import { Button } from "@/components/ui/button";
 import ProductList from "@/components/product-list";
 import Footer from "@/components/footer";
+import VariantSelector from "./components/variant-selector";
 
 
 interface ProductVariantParamsSlugProps {
@@ -24,10 +25,15 @@ const ProductVariantParamsSlug = async ({params}: ProductVariantParamsSlugProps)
   const { slug } = await params;
   console.log(slug);
 
+  // Busca o produto com suas variantes
   const productVariantBySlug = await db.query.productVariantTable.findFirst({
     where: eq(productVariantTable.slug, slug),
     with: {
-      product: true,
+      product: {
+        with: {
+          variants: true,
+        },
+      },
     }
   });
 
@@ -91,7 +97,10 @@ const ProductVariantParamsSlug = async ({params}: ProductVariantParamsSlugProps)
         </section>
 
         <section>
-          {/* variantes */}
+          <VariantSelector
+            variants={productVariantBySlug.product.variants}
+            selectedVariantSlug={productVariantBySlug.slug}
+          />
         </section>
 
         <section>
