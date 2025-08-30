@@ -16,7 +16,7 @@ interface ProductListProps {
 export default function ProductItem({ product }: ProductListProps) {
   const firstVariant = product.variants[0];
   return (
-    <Link href={`/product/${firstVariant.productId}`}>
+    <Link href={`/product-variant/${firstVariant.slug}`}>
       <Image
         src={firstVariant.imageUrl}
         alt={firstVariant.name}
