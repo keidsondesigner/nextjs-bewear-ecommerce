@@ -7,13 +7,14 @@ import Image from "next/image";
 import { db } from "@/db";
 import { productTable, productVariantTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { notFound, useParams } from "next/navigation";
-import Header from "@/components/header";
+import { notFound } from "next/navigation";
 import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
 import { Button } from "@/components/ui/button";
+import Header from "@/components/header";
 import ProductList from "@/components/product-list";
 import Footer from "@/components/footer";
 import VariantSelector from "./components/variant-selector";
+import QuantitySelector from "./components/quantity-selector";
 
 
 interface ProductVariantParamsSlugProps {
@@ -76,6 +77,9 @@ const ProductVariantParamsSlug = async ({params}: ProductVariantParamsSlugProps)
             <h3 className="truncate text-sm md:text-2xl font-bold">
               {formatCentsToBRL(productVariantBySlug.priceInCents)}
             </h3>
+
+            <QuantitySelector />
+
             <div className="flex flex-col gap-4 mt-8">
               <Button
                 className="rounded-full"
@@ -101,10 +105,6 @@ const ProductVariantParamsSlug = async ({params}: ProductVariantParamsSlugProps)
             variants={productVariantBySlug.product.variants}
             selectedVariantSlug={productVariantBySlug.slug}
           />
-        </section>
-
-        <section>
-          {/* quantidade */}
         </section>
 
         <section className="mb-14">
