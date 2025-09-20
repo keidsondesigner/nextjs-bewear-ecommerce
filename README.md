@@ -29,6 +29,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 - `npm run lint` - Run ESLint with Next.js rules
 - `npx shadcn@2.9.2 add [component-name]` - Add shadcn/ui components
 - `npx drizzle-kit push` - Push database migrations with Drizzle ORM
+- `npx drizzle-kit studio` - View tables in database
 - `npx @better-auth/cli@1.2.12 generate` - Generate Better Auth types and configuration
 - `npx tsx --env-file=.env src/db/seed.ts` - Run database seed script
 

@@ -17,6 +17,11 @@ export const userTable = pgTable("user", {
     .notNull(),
 });
 
+// Tipo de relacao: Um para Muitos (Um usuário tem muitos endereços de envio)
+export const userRelations = relations(userTable, (params) => ({
+  shippingAddresses: params.many(shippingAddressTable),
+}));
+
 export const sessionTable = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -121,6 +126,42 @@ export const productVariantRelations = relations(productVariantTable, (params) =
     product: params.one(productTable, {
       fields: [productVariantTable.productId],
       references: [productTable.id],
+    }),
+  };
+});
+
+
+
+// TABELAS DO CARRINHO DE COMPRAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+// Tabela de endereços de envio
+export const shippingAddressTable = pgTable("shipping_address", {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }), // Se eu deletar o usuário, deletar também o endereço de envio
+  recipientName: text("recipient_name").notNull(),
+  street: text().notNull(),
+  number: text().notNull(),
+  complement: text(),
+  city: text().notNull(),
+  state: text().notNull(),
+  neighborhood: text().notNull(),
+  zipCode: text().notNull(),
+  country: text().notNull(),
+  phone: text().notNull(),
+  email: text().notNull(),
+  cpfOrCnpj: text().notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp().notNull().defaultNow(),
+});
+
+// Tipo de relacao: Um para Muitos (Um endereço de envio pertence a um usuário)
+export const shippingAddressRelations = relations(shippingAddressTable, (params) => {
+  return {
+    user: params.one(userTable, {
+      fields: [shippingAddressTable.userId],
+      references: [userTable.id],
     }),
   };
 });
