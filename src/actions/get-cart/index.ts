@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/db";
+import { cartTable } from "@/db/schema";
 
 export async function getCart() {
   const session = await auth.api.getSession({
@@ -23,6 +24,18 @@ export async function getCart() {
       },
     },
   });
+
+  if (!cart) {
+    // Se o carrinho não existe, crio um carrinho e retorno ele
+    const [newCart] = await db.insert(cartTable).values({
+      userId: session.user.id,
+    }).returning();
+
+    return {
+      ...newCart,
+      cartItem: [],
+    };
+  }
 
   return cart;
 }
