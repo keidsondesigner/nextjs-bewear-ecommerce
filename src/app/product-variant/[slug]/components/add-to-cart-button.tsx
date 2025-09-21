@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addCartProduct } from "@/actions/add-cart-product";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface AddToCartButtonProps {
   productVariantId: string;
@@ -20,11 +21,17 @@ const AddToCartButton = ({ productVariantId, quantity }: AddToCartButtonProps) =
       productVariantId,
       quantity,
     }),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("onSuccess executado:", data);
+      toast.success("Produto adicionado ao carrinho");
       // 2. o cache da query ["cart"] do carrinho é invalidado, após adicionar o produto no carrinho.
       // 3. isso faz com que a query seja refetchada[recarregar automaticamente], e o carrinho seja atualizado.
       // 4. a query ["cart"] é uma query que busca o carrinho do usuário. queryKey: ["cart"], queryFn: () =>  getCart(),
       queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (error) => {
+      console.error("Erro ao adicionar produto ao carrinho:", error);
+      toast.error("Erro ao adicionar produto ao carrinho");
     },
   });
 
@@ -34,7 +41,10 @@ const AddToCartButton = ({ productVariantId, quantity }: AddToCartButtonProps) =
       size="lg"
       variant="outline"
       disabled={isPending}
-      onClick={() => mutate()}
+      onClick={() => {
+        console.log("Botão clicado, executando mutation...");
+        mutate();
+      }}
     >
       {isPending && <Loader2 className="animate-spin" />}
       Adicionar ao carrinho
