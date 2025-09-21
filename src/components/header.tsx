@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import Cart from "./cart";
 
 const Header = () => {
   //Renomeando data para session
@@ -31,7 +32,7 @@ const Header = () => {
               sizes="100vw"
             />
         </Link>
-      <div className="flex items-center">
+      <div className="flex items-center gap-5">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon">
@@ -81,6 +82,8 @@ const Header = () => {
             </div>
           </SheetContent>
         </Sheet>
+
+        <Cart />
       </div>
     </header>
   );
