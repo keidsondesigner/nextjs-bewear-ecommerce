@@ -160,14 +160,17 @@ export const shippingAddressTable = pgTable("shipping_address", {
 });
 
 // Tipo de relacao: Um para Muitos (Um endereço de envio pertence a um usuário)
-export const shippingAddressRelations = relations(shippingAddressTable, (params) => {
-  return {
-    user: params.one(userTable, {
-      fields: [shippingAddressTable.userId],
-      references: [userTable.id],
-    }),
-  };
-});
+// Tipo de relacao: Um para Muitos (Um endereço de envio pertence a um carrinho)
+export const shippingAddressRelations = relations(shippingAddressTable, (params) => ({
+  user: params.one(userTable, {
+    fields: [shippingAddressTable.userId],
+    references: [userTable.id],
+  }),
+  cart: params.one(cartTable, {
+    fields: [shippingAddressTable.id],
+    references: [cartTable.shippingAddressesId],
+  }),
+}));
 
 // Tabela de carrinho de compras
 export const cartTable = pgTable("cart", {
@@ -189,5 +192,31 @@ export const cartRelations = relations(cartTable, (params) => ({
   shippingAddresses: params.one(shippingAddressTable, {
     fields: [cartTable.shippingAddressesId],
     references: [shippingAddressTable.id],
+  }),
+  cartItem: params.many(cartItemTable),
+}));
+
+// Tabela de itens do carrinho - o item do carrinho, é um produto com sua quantidade.
+export const cartItemTable = pgTable("cart_item", {
+  id: uuid().primaryKey().defaultRandom(),
+  cartId: uuid("cart_id")
+    .notNull()
+    .references(() => cartTable.id, { onDelete: "cascade" }), // Se eu deletar o carrinho, deletar também os itens do carrinho
+  productVariantId: uuid("product_variant_id")
+    .notNull()
+    .references(() => productVariantTable.id, { onDelete: "cascade" }), // Se eu deletar a variante do produto, deletar também o item do carrinho
+  quantity: integer("quantity").notNull().default(1),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Tipo de relacao: Um para Muitos (Um item do carrinho pertence a um carrinho)
+export const cartItemRelations = relations(cartItemTable, (params) => ({
+  cart: params.one(cartTable, {
+    fields: [cartItemTable.cartId],
+    references: [cartTable.id],
+  }),
+  productVariant: params.one(productVariantTable, {
+    fields: [cartItemTable.productVariantId],
+    references: [productVariantTable.id],
   }),
 }));
