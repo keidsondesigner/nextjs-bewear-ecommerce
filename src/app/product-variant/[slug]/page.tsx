@@ -9,12 +9,11 @@ import { productTable, productVariantTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
-import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
 import ProductList from "@/components/product-list";
 import Footer from "@/components/footer";
 import VariantSelector from "./components/variant-selector";
-import QuantitySelector from "./components/quantity-selector";
+import ProductActions from "./components/product-actions";
 
 
 interface ProductVariantParamsSlugProps {
@@ -78,25 +77,10 @@ const ProductVariantParamsSlug = async ({params}: ProductVariantParamsSlugProps)
               {formatCentsToBRL(productVariantBySlug.priceInCents)}
             </h3>
 
-            <QuantitySelector />
-
-            <div className="flex flex-col gap-4 mt-8">
-              <Button
-                className="rounded-full"
-                size="lg"
-                variant="outline"
-              >
-                Adicionar ao carrinho
-              </Button>
-              <Button
-                className="rounded-full"
-                size="lg"
-                variant="default"
-              >
-                Comprar agora
-              </Button>
-              <p className="text-sm lg:text-lg font-medium text-muted-foreground my-4">{productVariantBySlug.product.description}</p>
-            </div>
+            <ProductActions
+              productVariantBySlugId={productVariantBySlug.id}
+              productDescription={productVariantBySlug.product.description}
+            />
           </div>
         </section>
 
