@@ -20,6 +20,10 @@ export const userTable = pgTable("user", {
 // Tipo de relacao: Um para Muitos (Um usuário tem muitos endereços de envio)
 export const userRelations = relations(userTable, (params) => ({
   shippingAddresses: params.many(shippingAddressTable),
+  cart: params.one(cartTable, {
+    fields: [userTable.id],
+    references: [cartTable.userId],
+  }),
 }));
 
 export const sessionTable = pgTable("session", {
@@ -152,8 +156,7 @@ export const shippingAddressTable = pgTable("shipping_address", {
   phone: text().notNull(),
   email: text().notNull(),
   cpfOrCnpj: text().notNull(),
-  createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 // Tipo de relacao: Um para Muitos (Um endereço de envio pertence a um usuário)
@@ -165,3 +168,26 @@ export const shippingAddressRelations = relations(shippingAddressTable, (params)
     }),
   };
 });
+
+// Tabela de carrinho de compras
+export const cartTable = pgTable("cart", {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }),
+  shippingAddressesId: uuid("shipping_addresses_id")
+    .references(() => shippingAddressTable.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Tipo de relacao: Um para Muitos (Um carrinho de compras pertence a um usuário)
+export const cartRelations = relations(cartTable, (params) => ({
+  user: params.one(userTable, {
+    fields: [cartTable.userId],
+    references: [userTable.id],
+  }),
+  shippingAddresses: params.one(shippingAddressTable, {
+    fields: [cartTable.shippingAddressesId],
+    references: [shippingAddressTable.id],
+  }),
+}));
