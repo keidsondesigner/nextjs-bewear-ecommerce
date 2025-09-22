@@ -90,7 +90,8 @@ const Header = () => {
           </SheetContent>
         </Sheet>
 
-        <Cart />
+        {/* // Se o usuário estiver logado, mostre o carrinho */}
+        {session?.user && <Cart />}
       </div>
     </header>
   );
