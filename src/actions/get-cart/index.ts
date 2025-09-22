@@ -19,7 +19,11 @@ export async function getCart() {
     with: {
       cartItem: {
         with: {
-          productVariant: true,
+          productVariant: {
+            with: {
+              product: true,
+            },
+          },
         },
       },
     },

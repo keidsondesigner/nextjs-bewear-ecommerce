@@ -3,8 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { getCart } from "@/actions/get-cart";
-import Image from "next/image";
-import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
+import CartItem from "./cart-item";
 
 const Cart = () => {
   const { data: cart, isPending: cartIsLoading } = useQuery({
@@ -25,20 +24,18 @@ const Cart = () => {
             <SheetTitle>Carrinho</SheetTitle>
           </SheetHeader>
           <div>
-            { cartIsLoading && <p>Carregando...</p>}
+            { cartIsLoading && <p className="text-center p-4">Carregando...</p>}
 
             {cart?.cartItem.map((item) => (
-              <div key={item.id}>
-                <Image
-                  src={item.productVariant.imageUrl}
-                  alt={item.productVariant.name}
-                  width={100}
-                  height={100}
-                />
-                <p>{item.productVariant.name}</p>
-                <p>{item.quantity}</p>
-                <p>{formatCentsToBRL(item.productVariant.priceInCents)}</p>
-              </div>
+              <CartItem
+                key={item.id}
+                id={item.id}
+                productName={item.productVariant.product.name}
+                productVariantName={item.productVariant.name}
+                productVariantImageUrl={item.productVariant.imageUrl}
+                productVariantPriceInCents={item.productVariant.priceInCents}
+                quantity={item.quantity}
+              />
             ))}
           </div>
       </SheetContent>
