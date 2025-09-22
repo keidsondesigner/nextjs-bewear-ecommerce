@@ -38,8 +38,12 @@ export async function getCart() {
     return {
       ...newCart,
       cartItem: [],
+      totalPriceInCents: 0,
     };
   }
 
-  return cart;
+  return {
+    ...cart,
+    totalPriceInCents: cart.cartItem.reduce((acc, item) => acc + item.productVariant.priceInCents * item.quantity, 0), // Subtotal do carrinho
+  };
 }
