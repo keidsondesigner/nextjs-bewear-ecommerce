@@ -1,6 +1,6 @@
 "use client";
 
-import { LogInIcon, LogOutIcon, MenuIcon } from "lucide-react";
+import { LogInIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import {
@@ -15,10 +15,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import Cart from "./cart";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Header = () => {
   //Renomeando data para session
   const { data: session } = authClient.useSession();
+  const queryClient = useQueryClient();
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    queryClient.invalidateQueries({ queryKey: ["cart"] });
+  };
 
   return (
     <header className="max-w-[1280px] mx-auto p-5 flex items-center justify-between">
@@ -63,7 +70,7 @@ const Header = () => {
                         </span>
                         </div>
                     </div>
-                    <Button variant="outline" onClick={() => authClient.signOut()}>
+                    <Button variant="outline" onClick={handleLogout}>
                         Sair
                     </Button>
                 </div>
