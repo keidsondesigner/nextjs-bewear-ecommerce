@@ -31,7 +31,7 @@ const AddToCartButton = ({ productVariantId, quantity }: AddToCartButtonProps) =
     },
     onError: (error) => {
       console.error("Erro ao adicionar produto ao carrinho:", error);
-      toast.error("Crie uma conta para adicionar produtos no carrinho");
+      toast.error("Faça o login ou crie uma conta para adicionar produtos no carrinho");
     },
   });
 
