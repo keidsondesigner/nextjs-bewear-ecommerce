@@ -2,13 +2,15 @@ import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { removeCartProduct } from "@/actions/remove-cart-product";
+import { decreaseCartProductQuantity } from "@/actions/decrease-cart-product";
+import { addCartProduct } from "@/actions/add-cart-product";
 
 interface CartItemProps {
   id: string;
+  productVariantId: string;
   productName: string;
   productVariantName: string;
   productVariantImageUrl: string;
@@ -18,14 +20,31 @@ interface CartItemProps {
 
 const CartItem = ({
   id,
+  productVariantId,
   productName,
   productVariantName,
   productVariantImageUrl,
   productVariantPriceInCents,
-  quantity: initialQuantity,
+  quantity,
 }: CartItemProps) => {
 
   const queryClient =  useQueryClient();
+
+  const increaseCartProductQuantityMutation = useMutation({
+    mutationKey: ["increase-cart-product-quantity"],
+    mutationFn: () => addCartProduct({ productVariantId, quantity: 1 }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    }
+  });
+
+  const decreaseCartProductQuantityMutation = useMutation({
+    mutationKey: ["decrease-cart-product-quantity"],
+    mutationFn: () => decreaseCartProductQuantity({ cartItemId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    }
+  });
 
   const removeProductCartMutation = useMutation({
     mutationKey: ["remove-cart-product", id],
@@ -46,19 +65,22 @@ const CartItem = ({
     })
   }
 
-  const [quantity, setQuantity] = useState(initialQuantity);
+  const handleDecreaseCartProductQuantity = () => {
+    decreaseCartProductQuantityMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success("Quantidade do produto decrementada.");
+      }
+    });
+  }
 
-  const handleQuantityChange = (action: "increment" | "decrement") => {
-    if (action === "increment") {
-      // Devemos evitar mutações de estado diretamente
-      // O último valor, pode não está atualizado
-      // setQuantity(quantity + 1);
-      // com `prev` pegamos realmente o ultimo valor
-      setQuantity(prevQuantity => prevQuantity + 1);
-    } else {
-      setQuantity(prevQuantity => prevQuantity - 1);
-    }
-  };
+  const handleIncreaseCartProductQuantity = () => {
+    increaseCartProductQuantityMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success("Quantidade do produto incrementada.");
+      }
+    });
+  }
+
   return (
     <div className="flex items-center justify-between p-4">
       <section className="flex items-center gap-3">
@@ -77,7 +99,7 @@ const CartItem = ({
             <Button
               className="h-4 w-4"
               variant="ghost"
-              onClick={() => handleQuantityChange("decrement")}
+              onClick={handleDecreaseCartProductQuantity}
               disabled={quantity <= 1}
             >
               <MinusIcon />
@@ -88,7 +110,7 @@ const CartItem = ({
             <Button
               className="h-4 w-4"
               variant="ghost"
-              onClick={() => handleQuantityChange("increment")}
+              onClick={handleIncreaseCartProductQuantity}
             >
               <PlusIcon />
             </Button>
