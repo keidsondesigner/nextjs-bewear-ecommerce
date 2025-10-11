@@ -3,9 +3,9 @@ import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
 import { Button } from "./ui/button";
 import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 
-import { useRemoveProductCartMutation } from "@/app/hooks/mutations/use-remove-product-from-cart";
-import { useDecreaseCartProductQuantityMutation } from "@/app/hooks/mutations/use-decrease-product-quantity-cart";
-import { useIncreaseCartProductQuantityMutation } from "@/app/hooks/mutations/use-increase-product-quantity-cart";
+import { useRemoveProductCartMutation } from "@/hooks/mutations/use-remove-product-from-cart";
+import { useDecreaseCartProductQuantityMutation } from "@/hooks/mutations/use-decrease-product-quantity-cart";
+import { useIncreaseCartProductQuantityMutation } from "@/hooks/mutations/use-increase-product-quantity-cart";
 
 import { toast } from "sonner";
 

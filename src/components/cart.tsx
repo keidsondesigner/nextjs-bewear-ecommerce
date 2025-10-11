@@ -1,7 +1,7 @@
 import { ShoppingBasketIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
-import { useCart } from "@/app/hooks/queries/use-cart";
+import { useCart } from "@/hooks/queries/use-cart";
 import CartItem from "./cart-item";
 import { ScrollArea } from "./ui/scroll-area";
 import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
