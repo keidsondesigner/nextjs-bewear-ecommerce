@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { removeCartProduct } from "@/actions/remove-cart-product";
 import { decreaseCartProductQuantity } from "@/actions/decrease-cart-product";
 import { addCartProduct } from "@/actions/add-cart-product";
+import { useRemoveProductCartMutation } from "@/app/hooks/mutations/use-remove-product-from-cart";
 
 interface CartItemProps {
   id: string;
@@ -46,13 +47,7 @@ const CartItem = ({
     }
   });
 
-  const removeProductCartMutation = useMutation({
-    mutationKey: ["remove-cart-product", id],
-    mutationFn: () => removeCartProduct({ cartItemId: id }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-    }
-  });
+  const removeProductCartMutation = useRemoveProductCartMutation(id);
 
   const handleDeleteClick = () => {
     removeProductCartMutation.mutate(undefined, {
