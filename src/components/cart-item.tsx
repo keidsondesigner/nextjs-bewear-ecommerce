@@ -1,13 +1,13 @@
-import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
 import Image from "next/image";
+import { formatCentsToBRL } from "@/app/helpers/format-money-brl";
 import { Button } from "./ui/button";
 import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { decreaseCartProductQuantity } from "@/actions/decrease-cart-product";
-import { addCartProduct } from "@/actions/add-cart-product";
+
 import { useRemoveProductCartMutation } from "@/app/hooks/mutations/use-remove-product-from-cart";
 import { useDecreaseCartProductQuantityMutation } from "@/app/hooks/mutations/use-decrease-product-quantity-cart";
+import { useIncreaseCartProductQuantityMutation } from "@/app/hooks/mutations/use-increase-product-quantity-cart";
+
+import { toast } from "sonner";
 
 interface CartItemProps {
   id: string;
@@ -29,18 +29,8 @@ const CartItem = ({
   quantity,
 }: CartItemProps) => {
 
-  const queryClient =  useQueryClient();
-
-  const increaseCartProductQuantityMutation = useMutation({
-    mutationKey: ["increase-cart-product-quantity"],
-    mutationFn: () => addCartProduct({ productVariantId, quantity: 1 }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-    }
-  });
-
+  const increaseCartProductQuantityMutation = useIncreaseCartProductQuantityMutation(productVariantId);
   const decreaseCartProductQuantityMutation = useDecreaseCartProductQuantityMutation(id);
-
   const removeProductCartMutation = useRemoveProductCartMutation(id);
 
   const handleDeleteClick = () => {
