@@ -4,10 +4,10 @@ import { Button } from "./ui/button";
 import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { removeCartProduct } from "@/actions/remove-cart-product";
 import { decreaseCartProductQuantity } from "@/actions/decrease-cart-product";
 import { addCartProduct } from "@/actions/add-cart-product";
 import { useRemoveProductCartMutation } from "@/app/hooks/mutations/use-remove-product-from-cart";
+import { useDecreaseCartProductQuantityMutation } from "@/app/hooks/mutations/use-decrease-product-quantity-cart";
 
 interface CartItemProps {
   id: string;
@@ -39,13 +39,7 @@ const CartItem = ({
     }
   });
 
-  const decreaseCartProductQuantityMutation = useMutation({
-    mutationKey: ["decrease-cart-product-quantity"],
-    mutationFn: () => decreaseCartProductQuantity({ cartItemId: id }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-    }
-  });
+  const decreaseCartProductQuantityMutation = useDecreaseCartProductQuantityMutation(id);
 
   const removeProductCartMutation = useRemoveProductCartMutation(id);
 
