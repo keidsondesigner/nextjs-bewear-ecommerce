@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { addCartProductSchema, AddCartProductSchema } from "./schema";
 import { db } from "@/db";
 import { cartItemTable, cartTable } from "@/db/schema";
@@ -54,6 +55,8 @@ export async function addCartProduct(data: AddCartProductSchema) {
       quantity: cartItem.quantity + data.quantity,
     }).where(eq(cartItemTable.id, cartItem.id));
 
+    // Invalida o cache da página de identificação do carrinho
+    revalidatePath("/cart/identification");
     return;
   }
 
@@ -63,4 +66,7 @@ export async function addCartProduct(data: AddCartProductSchema) {
     productVariantId: data.productVariantId,
     quantity: data.quantity,
   });
+
+  // Invalida o cache da página de identificação do carrinho
+  revalidatePath("/cart/identification");
 }

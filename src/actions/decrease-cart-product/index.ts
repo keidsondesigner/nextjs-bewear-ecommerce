@@ -3,6 +3,7 @@
 import { DecreaseCartProductQuantitySchema, decreaseCartProductQuantitySchema } from "./schema";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { cartItemTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -40,11 +41,16 @@ export async function decreaseCartProductQuantity(data: DecreaseCartProductQuant
   // se tiver apenas 1 item no carrinho, deleta o item
   if (cartItem.quantity === 1) {
     await db.delete(cartItemTable).where(eq(cartItemTable.id, cartItem.id));
+    // Invalida o cache da página de identificação do carrinho
+    revalidatePath("/cart/identification");
     return;
   }
   // se tiver mais de 1 item no carrinho, decrementa a quantidade
   await db.update(cartItemTable).set({
     quantity: cartItem.quantity - 1,
   }).where(eq(cartItemTable.id, cartItem.id));
+
+  // Invalida o cache da página de identificação do carrinho
+  revalidatePath("/cart/identification");
 
 }

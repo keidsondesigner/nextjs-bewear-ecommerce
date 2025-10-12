@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { removeCartProductSchema, RemoveCartProductSchema } from "./schema";
 import { db } from "@/db";
 import { cartItemTable } from "@/db/schema";
@@ -36,4 +37,7 @@ export async function removeCartProduct(data: RemoveCartProductSchema) {
 
   // Deleta o item do carrinho no banco de dados, seje igual ao id do item deletado do carrinho
   await db.delete(cartItemTable).where(eq(cartItemTable.id, cartItem.id));
+
+  // Invalida o cache da página de identificação do carrinho
+  revalidatePath("/cart/identification");
 }
