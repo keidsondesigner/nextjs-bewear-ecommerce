@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import Header from "@/components/header";
 import Addresses from "./components/addresses";
 import SummaryCartOrder from "./components/summary-cart-order";
+import Footer from "@/components/footer";
 
 const CartIdentificationPage = async () => {
   const session = await auth.api.getSession({
@@ -41,21 +42,26 @@ const CartIdentificationPage = async () => {
   return (
     <>
       <Header />
-      <div className="max-w-[1280px] mx-auto p-5 gap-4">
-        <Addresses />
-        <SummaryCartOrder
-          subtotalInCents={cartTotalPriceInCents}
-          totalInCents={cartTotalPriceInCents}
-          products={cart.cartItem.map(item => ({
-            id: item.id,
-            name: item.productVariant.name,
-            variantName: item.productVariant.name,
-            quantity: item.quantity,
-            priceInCents: item.productVariant.priceInCents,
-            imageUrl: item.productVariant.imageUrl,
-          }))}
-        />
+      <div className="max-w-[1280px] mx-auto justify-center p-5 gap-4 flex flex-col md:flex-row">
+        <div className="md:w-1/2">
+          <Addresses />
+        </div>
+        <div className="md:w-1/2 mt-4 md:mt-0">
+          <SummaryCartOrder
+            subtotalInCents={cartTotalPriceInCents}
+            totalInCents={cartTotalPriceInCents}
+            products={cart.cartItem.map(item => ({
+              id: item.id,
+              name: item.productVariant.name,
+              variantName: item.productVariant.name,
+              quantity: item.quantity,
+              priceInCents: item.productVariant.priceInCents,
+              imageUrl: item.productVariant.imageUrl,
+            }))}
+          />
+        </div>
       </div>
+      <Footer />
     </>
   )
 }

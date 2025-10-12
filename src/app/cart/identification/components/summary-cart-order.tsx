@@ -20,7 +20,7 @@ interface SummaryCartOrderProps {
 
 const SummaryCartOrder = ({ subtotalInCents, totalInCents, products }: SummaryCartOrderProps) => {
   return (
-    <Card className="mt-4">
+    <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold">Resumo do pedido</CardTitle>
       </CardHeader>

@@ -32,7 +32,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           {children}
         </ReactQueryProvider>
-        <Toaster position="top-center" duration={3000} richColors />
+        <Toaster position="top-center" duration={3000} />
       </body>
     </html>
   );
