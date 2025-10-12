@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { createShippingAddressSchema, CreateShippingAddressSchema } from "./schema";
 import { db } from "@/db";
 import { shippingAddressTable } from "@/db/schema";
+import { revalidatePath } from "next/cache";
 
 export async function createShippingAddress(data: CreateShippingAddressSchema) {
   createShippingAddressSchema.parse(data); // Validar os dados da requisição
@@ -33,6 +34,12 @@ export async function createShippingAddress(data: CreateShippingAddressSchema) {
     email: data.email,
     cpfOrCnpj: data.cpfOrCnpj,
   }).returning();
+
+  // revalidatePath é uma função do Next.js que invalida o cache de uma rota específica.
+  // Isso significa que, na próxima requisição para "/cart/identification", o Next.js
+  // irá buscar os dados mais recentes do servidor, garantindo que o novo endereço
+  // de envio criado seja exibido na página de identificação do carrinho.
+  revalidatePath("/cart/identification");
 
   return newAddress;
 }
