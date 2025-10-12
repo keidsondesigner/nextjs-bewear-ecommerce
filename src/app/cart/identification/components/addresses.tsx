@@ -58,7 +58,7 @@ const Addresses = () => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Endereços</CardTitle>
+          <CardTitle className="text-lg font-semibold">Endereços</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">Carregando endereços...</p>
@@ -70,7 +70,7 @@ const Addresses = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Endereços</CardTitle>
+        <CardTitle className="text-lg font-semibold">Endereços</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="mb-8">
