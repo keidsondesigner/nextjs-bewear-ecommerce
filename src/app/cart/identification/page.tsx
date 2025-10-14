@@ -6,8 +6,8 @@ import { db } from "@/db";
 import { cartTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import Header from "@/components/header";
-import Addresses from "./components/addresses";
-import SummaryCartOrder from "./components/summary-cart-order";
+import Addresses from "../components/addresses";
+import SummaryCartOrder from "../components/summary-cart-order";
 import Footer from "@/components/footer";
 
 const CartIdentificationPage = async () => {
