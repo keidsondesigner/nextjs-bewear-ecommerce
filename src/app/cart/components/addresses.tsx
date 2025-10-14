@@ -29,8 +29,6 @@ const Addresses = () => {
       await updateCartShippingAddressMutation.mutateAsync({ shippingAddressId: newAddress.id });
       toast.success("Endereço vinculado ao carrinho com sucesso");
 
-      // Redirecionar para a página de pagamento
-      router.push("/cart/payment");
     } catch (error) {
       console.error("Error adding address:", error);
       toast.error("Erro ao adicionar endereço");
@@ -48,7 +46,7 @@ const Addresses = () => {
       toast.success("Endereço vinculado ao carrinho com sucesso");
 
       // Redirecionar para a página de pagamento
-      router.push("/cart/payment");
+      router.push("/cart/confirmation");
     } catch (error) {
       console.error("Error updating cart:", error);
       toast.error("Erro ao vincular endereço ao carrinho");
