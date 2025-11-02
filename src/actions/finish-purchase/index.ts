@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { cartItemTable, cartTable, orderItemTable, orderTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -77,5 +76,4 @@ export async function finishPurchase() {
     // Deletar o carrinho após a compra
     await tx.delete(cartTable).where(eq(cartTable.userId, session.user.id!));
   });
-  revalidatePath("/cart/identification");
 }
