@@ -132,6 +132,8 @@ export const productVariantRelations = relations(productVariantTable, (params) =
       fields: [productVariantTable.productId],
       references: [productTable.id],
     }),
+    cartItems: params.many(cartItemTable),
+    orderItems: params.many(orderItemTable),
   };
 });
 
@@ -261,5 +263,32 @@ export const orderRelations = relations(orderTable, (params) => ({
   shippingAddress: params.one(shippingAddressTable, {
     fields: [orderTable.shippingAddressId],
     references: [shippingAddressTable.id],
+  }),
+  items: params.many(orderItemTable),
+}));
+
+
+// Tabela de itens do pedido - o item do pedido, é um produto com sua quantidade.
+export const orderItemTable = pgTable("order_item", {
+  id: uuid().primaryKey().defaultRandom(),
+  orderId: uuid("order_id")
+    .notNull()
+    .references(() => orderTable.id, { onDelete: "cascade" }),
+  productVariantId: uuid("product_variant_id")
+    .notNull()
+    .references(() => productVariantTable.id, { onDelete: "restrict" }),
+  quantity: integer("quantity").notNull().default(1),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Tipo de relacao: Um para Muitos (Um item do pedido pertence a um pedido)
+export const orderItemRelations = relations(orderItemTable, (params) => ({
+  order: params.one(orderTable, {
+    fields: [orderItemTable.orderId],
+    references: [orderTable.id],
+  }),
+  productVariant: params.one(productVariantTable, {
+    fields: [orderItemTable.productVariantId],
+    references: [productVariantTable.id],
   }),
 }));
