@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { ShoppingBasketIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
@@ -67,8 +69,11 @@ const Cart = () => {
               </div>
 
               <Button className="w-full mt-5">
-                Finalizar compra
+                <Link href="/cart/identification">
+                    Finalizar compra
+                </Link>
               </Button>
+
             </div>
           )}
       </SheetContent>
