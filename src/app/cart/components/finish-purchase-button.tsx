@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useFinishPurchaseMutation } from "@/hooks/mutations/use-finish-purchase";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -12,14 +11,13 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 export const FinishPurchaseButton = () => {
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
-  const router = useRouter();
   const { mutate: finishPurchase, isPending } = useFinishPurchaseMutation();
 
   const handleFinishPurchase = () => {
     finishPurchase(undefined, {
       onSuccess: () => {
         toast.success("Compra finalizada com sucesso!");
-        router.push("/");
+        setSuccessDialogOpen(true);
       },
       onError: (error) => {
         toast.error(error.message || "Erro ao finalizar a compra");
@@ -45,8 +43,9 @@ export const FinishPurchaseButton = () => {
             <DialogTitle className="text-lg font-semibold text-center">Pedido efetuado!</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            <p>Seu pedido foi efetuado com sucesso.</p>
-            <p>Você pode acompanhar o status na seção de “Meus Pedidos”.</p>
+            Seu pedido foi efetuado com sucesso.
+            <br />
+            Você pode acompanhar o status na seção de &quot;Meus Pedidos&quot;.
           </DialogDescription>
           <DialogFooter className="mx-auto">
             <Button onClick={() => setSuccessDialogOpen(false)}>Ver meus pedidos</Button>
