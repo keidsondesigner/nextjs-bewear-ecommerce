@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { cartItemTable, cartTable, orderItemTable, orderTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -39,27 +40,40 @@ export async function finishPurchase() {
   // O transaction, executa as duas operações em uma única transação;
   // Se uma falhar, ele desfaz a execução da outra.
   await db.transaction(async (tx) => {
+    const shippingAddress = cart.shippingAddresses!;
+    
     const [order] = await tx.insert(orderTable).values({
-      ...cart.shippingAddresses!,
       userId: session.user.id!,
-      shippingAddressId: cart.shippingAddresses!.id,
+      shippingAddressId: shippingAddress.id,
+      recipientName: shippingAddress.recipientName,
+      street: shippingAddress.street,
+      number: shippingAddress.number,
+      complement: shippingAddress.complement,
+      city: shippingAddress.city,
+      state: shippingAddress.state,
+      neighborhood: shippingAddress.neighborhood,
+      zipCode: shippingAddress.zipCode,
+      country: shippingAddress.country,
+      phone: shippingAddress.phone,
+      email: shippingAddress.email,
+      cpfOrCnpj: shippingAddress.cpfOrCnpj,
       totalPriceInCents,
     }).returning();
 
     if (!order) {
       throw new Error("Order not created");
     }
-    const orderItemsPayload: Array<typeof orderItemTable.$inferInsert> =cart.cartItem.map((item) => ({
+    
+    const orderItemsPayload: Array<typeof orderItemTable.$inferInsert> = cart.cartItem.map((item) => ({
       orderId: order.id,
       productVariantId: item.productVariantId,
       quantity: item.quantity,
-      priceInCents: item.productVariant.priceInCents,
-    }))
+    }));
 
     // Inserir os itens do pedido
     await tx.insert(orderItemTable).values(orderItemsPayload);
     // Deletar os itens do carrinho após a compra
     await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id));
   });
-
+  revalidatePath("/cart/identification");
 }
