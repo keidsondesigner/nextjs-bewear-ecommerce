@@ -9,7 +9,7 @@ import Header from "@/components/header";
 import SummaryCartOrder from "../components/summary-cart-order";
 import Footer from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { FinishPurchaseButton } from "../components/finish-purchase-button";
 
 const CartConfirmationPage = async () => {
   const session = await auth.api.getSession({
@@ -77,11 +77,7 @@ const CartConfirmationPage = async () => {
                     Contato: {cart.shippingAddresses.phone}
                   </p>
                 </div>
-                <Button
-                  className="w-full mt-4"
-                >
-                  Finalizar compra
-                </Button>
+                <FinishPurchaseButton />
               </div>
             </CardContent>
           </Card>
