@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, uuid, text, timestamp, integer, boolean } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, integer, boolean, pgEnum } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
   id: text("id").primaryKey(),
@@ -24,6 +24,7 @@ export const userRelations = relations(userTable, (params) => ({
     fields: [userTable.id],
     references: [cartTable.userId],
   }),
+  orders: params.many(orderTable),
 }));
 
 export const sessionTable = pgTable("session", {
@@ -170,6 +171,7 @@ export const shippingAddressRelations = relations(shippingAddressTable, (params)
     fields: [shippingAddressTable.id],
     references: [cartTable.shippingAddressesId],
   }),
+  orders: params.many(orderTable),
 }));
 
 // Tabela de carrinho de compras
@@ -218,5 +220,46 @@ export const cartItemRelations = relations(cartItemTable, (params) => ({
   productVariant: params.one(productVariantTable, {
     fields: [cartItemTable.productVariantId],
     references: [productVariantTable.id],
+  }),
+}));
+
+
+// TABELAS DO PEDIDO DE COMPRA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+export const orderStatus = pgEnum("order_status", ["pending", "paid", "cancelled"]);
+
+export const orderTable = pgTable("order", {
+  id: uuid().primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }),
+  shippingAddressId: uuid("shipping_address_id")
+    .notNull()
+    .references(() => shippingAddressTable.id, { onDelete: "set null" }),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  recipientName: text("recipient_name").notNull(),
+  street: text().notNull(),
+  number: text().notNull(),
+  complement: text(),
+  city: text().notNull(),
+  state: text().notNull(),
+  neighborhood: text().notNull(),
+  zipCode: text("zip_code").notNull(),
+  country: text().notNull(),
+  phone: text().notNull(),
+  email: text().notNull(),
+  cpfOrCnpj: text("cpf_or_cnpj").notNull(),
+  totalPriceInCents: integer("total_price_in_cents").notNull(),
+  status: orderStatus().notNull().default("pending"),
+});
+
+// Tipo de relacao: Um para Muitos (Um pedido de compra pertence a um usuário e a um endereço de envio)
+export const orderRelations = relations(orderTable, (params) => ({
+  user: params.one(userTable, {
+    fields: [orderTable.userId],
+    references: [userTable.id],
+  }),
+  shippingAddress: params.one(shippingAddressTable, {
+    fields: [orderTable.shippingAddressId],
+    references: [shippingAddressTable.id],
   }),
 }));
