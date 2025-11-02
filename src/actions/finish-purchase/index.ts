@@ -74,6 +74,8 @@ export async function finishPurchase() {
     await tx.insert(orderItemTable).values(orderItemsPayload);
     // Deletar os itens do carrinho após a compra
     await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id));
+    // Deletar o carrinho após a compra
+    await tx.delete(cartTable).where(eq(cartTable.userId, session.user.id!));
   });
   revalidatePath("/cart/identification");
 }
