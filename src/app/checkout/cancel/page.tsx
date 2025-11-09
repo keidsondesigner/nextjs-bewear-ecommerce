@@ -23,9 +23,6 @@ const CheckoutCancelPage = () => {
             Você pode tentar novamente ou continuar comprando.
           </DialogDescription>
           <DialogFooter className="mx-auto">
-            <Button asChild>
-              <Link href="/cart/identification">Tentar novamente</Link>
-            </Button>
             <Button variant="outline" asChild>
               <Link href="/">Voltar para a loja</Link>
             </Button>
