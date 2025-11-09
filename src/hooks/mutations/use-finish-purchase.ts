@@ -10,7 +10,9 @@ export const useFinishPurchaseMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: getFinishPurchaseMutationKey(),
-    mutationFn: () => finishPurchase(),
+    mutationFn: async () => {
+      return await finishPurchase();
+    },
     onSuccess: () => {
       // Invalidar os dados do carrinho para recarregar após a compra
       queryClient.invalidateQueries({ queryKey: getUseCartQueryKey() });

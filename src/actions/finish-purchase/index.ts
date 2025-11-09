@@ -36,6 +36,8 @@ export async function finishPurchase() {
 
   const totalPriceInCents = cart.cartItem.reduce((acc, item) => acc + item.productVariant.priceInCents * item.quantity, 0);
 
+  let orderId: string | undefined;
+
   // O transaction, executa as duas operações em uma única transação;
   // Se uma falhar, ele desfaz a execução da outra.
   await db.transaction(async (tx) => {
@@ -62,7 +64,9 @@ export async function finishPurchase() {
     if (!order) {
       throw new Error("Order not created");
     }
-    
+
+    orderId = order.id;
+
     const orderItemsPayload: Array<typeof orderItemTable.$inferInsert> = cart.cartItem.map((item) => ({
       orderId: order.id,
       productVariantId: item.productVariantId,
@@ -76,4 +80,10 @@ export async function finishPurchase() {
     // Deletar o carrinho após a compra
     await tx.delete(cartTable).where(eq(cartTable.userId, session.user.id!));
   });
+
+  if (!orderId) {
+    throw new Error("Order not created");
+  }
+
+  return orderId;
 }
