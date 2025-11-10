@@ -142,7 +142,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 **Component System:**
 - shadcn/ui components use `cn()` utility for class merging (clsx + tailwind-merge)
 - Component aliases: `@/components`, `@/components/ui`, `@/lib/utils`, `@/hooks`
-- Install components with: `npx shadcn@latest add [component-name]`
+- Install components with: `npx shadcn@2.9.2 add [component-name]`
 - Lucide React for consistent iconography
 
 **Authentication:**
