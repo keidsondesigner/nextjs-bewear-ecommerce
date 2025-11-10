@@ -142,7 +142,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 **Component System:**
 - shadcn/ui components use `cn()` utility for class merging (clsx + tailwind-merge)
 - Component aliases: `@/components`, `@/components/ui`, `@/lib/utils`, `@/hooks`
-- Install components with: `npx shadcn@latest add [component-name]`
+- Install components with: `npx shadcn@2.9.2 add [component-name]`
 - Lucide React for consistent iconography
 
 **Authentication:**
@@ -215,3 +215,19 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 - Shipping address management for users
 - Cart identification page for checkout flow
 - Order summary with price calculations
+
+**Stripe:*
+- npm i stripe@18.4.0
+- Ao integrar o Stripe com Next, deve ser criado as duas variavés STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY
+
+- Para desenvolvedores:
+> Chave publicável:	pk_live_51QJ7V2Arx****************************************
+> Chave secreta: 	sk_live_51QJ7V2Arx****************************************
+
+- No Next.Js variáveis pública devem ter o "NEXT_PUBLIC"
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_51QJ7V2Arx*************************
+STRIPE_SECRET_KEY=pk_live_51QJ7V2Arx*************************
+
+
+- Redireciona para a sessão de pagamento
+- Devo usar a lib @stripe/stripe-js@7.8.0 para redirecionar para a sessão de pagamento

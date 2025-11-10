@@ -7,22 +7,30 @@ import { useFinishPurchaseMutation } from "@/hooks/mutations/use-finish-purchase
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { createCheckoutSessionStripe } from "@/actions/create-checkout-session-stripe";
+import { loadStripe } from "@stripe/stripe-js";
 
 export const FinishPurchaseButton = () => {
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
 
-  const { mutate: finishPurchase, isPending } = useFinishPurchaseMutation();
+  const finishPurchaseMutation = useFinishPurchaseMutation();
 
-  const handleFinishPurchase = () => {
-    finishPurchase(undefined, {
-      onSuccess: () => {
-        toast.success("Compra finalizada com sucesso!");
-        setSuccessDialogOpen(true);
-      },
-      onError: (error) => {
-        toast.error(error.message || "Erro ao finalizar a compra");
-      }
-    });
+  const handleFinishPurchase = async () => {
+    try {
+      const orderId = await finishPurchaseMutation.mutateAsync();
+
+      const checkoutSession = await createCheckoutSessionStripe({
+        orderId: orderId,
+      });
+
+      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+      await stripe?.redirectToCheckout({ sessionId: checkoutSession.id });
+
+      // Abre o dialog de sucesso
+      setSuccessDialogOpen(true);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao finalizar a compra");
+    }
   };
 
   return (
@@ -30,9 +38,9 @@ export const FinishPurchaseButton = () => {
       <Button
         className="w-full mt-4"
         onClick={handleFinishPurchase}
-        disabled={isPending}
+        disabled={finishPurchaseMutation.isPending}
       >
-        {isPending ? "Finalizando..." : "Finalizar compra"}
+        {finishPurchaseMutation.isPending ? "Finalizando..." : "Finalizar compra"}
       </Button>
 
 
